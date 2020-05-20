@@ -1,13 +1,19 @@
-package plant
+package handler
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/victor-schumacher/estou-com-sede-api/server"
+	"github.com/victor-schumacher/estou-com-sede-api/api/twitter"
 	"net/http"
+
+	"github.com/victor-schumacher/estou-com-sede-api/pkg/entity"
+	"github.com/victor-schumacher/estou-com-sede-api/pkg/service"
 )
 
 type Manager struct {
+}
+
+type PlantHandler interface {
+	Handle() http.HandlerFunc
 }
 
 func NewPlantManager() Manager {
@@ -16,17 +22,16 @@ func NewPlantManager() Manager {
 
 func (m Manager) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
+		if r.Method == http.MethodPost {
 			processPost(w, r)
-		default:
+		} else {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	}
 }
 
 func processPost(w http.ResponseWriter, r *http.Request) {
-	plant := server.Plant{}
+	plant := entity.Plant{}
 
 	defer r.Body.Close()
 
@@ -34,22 +39,9 @@ func processPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Error while processing data", http.StatusBadRequest)
 	}
-	humidityLevel := humidityLevel(plant.SensorHumidity)
-	fmt.Println(humidityLevel)
-}
+	humidityLevel := service.HumidityLevel(plant.SensorHumidity)
 
-// Translating sensor humidity to four levels
-func humidityLevel(sh int) int {
-	switch {
-	case sh >= 100:
-		return 4
-	case sh > 50 && sh < 75:
-		return 3
-	case sh > 25 && sh < 50:
-		return 2
-	case sh < 25:
-		return 1
-	default:
-		return 0
-	}
+	go twitter.PostTweet(humidityLevel)
+
+
 }
