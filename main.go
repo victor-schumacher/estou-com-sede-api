@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/victor-schumacher/estou-com-sede-api/api/handler"
 	"log"
 	"net/http"
-
+	"os"
 )
 
 func main(){
@@ -12,5 +13,6 @@ func main(){
 	plantManager := handler.NewPlantManager()
 
 	http.Handle("/humidity" , plantManager.Handle())
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
+	log.Fatal(http.ListenAndServe(port, nil))
 }
