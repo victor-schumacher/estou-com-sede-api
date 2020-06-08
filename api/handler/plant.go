@@ -41,7 +41,7 @@ func processPost(w http.ResponseWriter, r *http.Request) {
 	}
 	humidityLevel := service.HumidityLevel(plant.SensorHumidity)
 
-	go twitter.PostTweet(humidityLevel)
+	twitter.PostTweet(humidityLevel)
 
 
 }
