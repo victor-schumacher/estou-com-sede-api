@@ -3,7 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"github.com/victor-schumacher/estou-com-sede-api/api/twitter"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/victor-schumacher/estou-com-sede-api/pkg/entity"
 	"github.com/victor-schumacher/estou-com-sede-api/pkg/service"
@@ -35,13 +37,21 @@ func processPost(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&plant)
+	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Error while processing data", http.StatusBadRequest)
+		http.Error(w, "Error reading", http.StatusBadRequest)
 	}
-	humidityLevel := service.HumidityLevel(plant.SensorHumidity)
+
+	err = json.Unmarshal(bodyBytes, &plant)
+	if err != nil {
+		http.Error(w, "Error unmarshal", http.StatusBadRequest)
+	}
+
+	hInt, err := strconv.Atoi(plant.SensorHumidity)
+
+	humidityLevel := service.HumidityLevel(hInt)
 
 	twitter.PostTweet(humidityLevel)
 
-
+	//email.SendEmail()
 }

@@ -8,8 +8,7 @@ import (
 )
 
 func HumidityLevel(sensorHumidity int) string {
-	rand.Seed(time.Now().UnixNano())
-	index := rand.Intn(len(entity.RandomMessages))
+	index := RandomInt(len(entity.RandomMessages))
 
 	switch {
 	case sensorHumidity >= 75:
@@ -23,4 +22,10 @@ func HumidityLevel(sensorHumidity int) string {
 	default:
 		return "Impossibru"
 	}
+}
+
+func RandomInt(max int) int {
+	rand.Seed(time.Now().UnixNano())
+	randInt := rand.Intn(max)
+	return randInt
 }
