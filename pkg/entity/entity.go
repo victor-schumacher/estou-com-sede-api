@@ -3,7 +3,7 @@ package entity
 type Plant struct {
 	SensorHumidity string
 	//FinalHumidity  int `json:"finalHumidity"`
-	//EmailAddress string `json:"emailAddress"`
+	EmailAddress string `json:"emailAddress"`
 }
 
 var PlantMessages = []string{"Estou com muita sede", "Estou com sede", "Tudo bem por aqui", "Agua demais!"}

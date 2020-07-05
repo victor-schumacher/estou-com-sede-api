@@ -12,7 +12,7 @@ import (
 func SendEmail(userEmail string) {
 	from := mail.NewEmail("Estou com sede", "estoucomsedeapi@gmail.com")
 	subject := "Estou com sede?"
-	to := mail.NewEmail("Vitao", userEmail)
+	to := mail.NewEmail("VIctor", userEmail)
 	plainTextContent := "and easy to do anywhere, even with Go"
 	htmlContent := "<strong>and easy to do anywhere, even with Go</strong>"
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
