@@ -7,7 +7,7 @@ COPY . .
 RUN go get -d -v ./...
 
 RUN go install -v ./...
-##Test    
+##Tes    
 EXPOSE $PORT
 
 CMD ["estou-com-sede-api"]
